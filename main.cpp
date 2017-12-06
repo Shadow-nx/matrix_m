@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <string>
 #include <cstring>
-
+#include <cstdlib>
 using namespace std;
 
 void show_matrix(int **matrix,int x,int y) {
