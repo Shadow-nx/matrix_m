@@ -3,6 +3,9 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
+#include <fstream>
+#include <limits>
+
 using namespace std;
 
 void show_matrix(int **matrix,int x,int y) {
@@ -158,6 +161,44 @@ void transpose_matrix(int **&matrix,int &x,int &y) {
 	matrix=matrix_t;
 	swap(x,y);
 }
+void save_to_file(int **matrix,int x,int y) {
+	string file_name;
+	cout<<"please enter file name"<<endl;
+	cin>>file_name;
+	ofstream fout(file_name);
+	fout<<setw(4)<<x<<setw(4)<<y<<endl;
+	for(int i=0; i<x; i++) {
+		for(int j=0; j<y; j++)
+			fout<<setw(4)<<matrix[i][j];
+		fout<<endl;
+	}
+	fout.close();
+}
+void load_from_file(int **&matrix,int &x,int &y) {
+	string road_to_file;
+	cout<<"please enter road to file"<<endl;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(),'\n');
+	cin.ignore();
+	getline(cin,road_to_file);
+	ifstream fin("c"+road_to_file);
+	if (!fin.is_open()) {
+		cout << "file cant open";
+		return;
+	}
+	fin>>x>>y;
+	if(matrix!=nullptr)
+		delete_matrix(matrix,x);
+	matrix=new int*[x];
+	for(int i=0; i<x; i++)
+		matrix[i]=new int[y];
+
+	for(int i=0; i<x; i++)
+		for(int j=0; j<y; j++)
+			fin>>matrix[i][j];
+	fin.close();
+
+}
 
 void print_menu() {
 	cout<<endl;
@@ -195,6 +236,12 @@ int main(int argc,char *argv[]) {
 				break;
 			case 4:
 				transpose_matrix(matrix,x,y);
+				break;
+			case 5:
+				save_to_file(matrix,x,y);
+				break;
+			case 6:
+				load_from_file(matrix,x,y);
 				break;
 			case 8:
 				return 0;
